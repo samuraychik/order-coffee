@@ -23,6 +23,7 @@ function makeRadioUnique(beverage) {
         radio.name = `milk${formsCount}`;
     }
 }
+
 function appendDeleteButton(beverage) {
     const deleteButton = document.createElement('button');
     deleteButton.classList.add('delete_button');
@@ -54,13 +55,13 @@ submitButton.addEventListener('click', event => {
 
     const modalContent = document.createElement('div');
     modalContent.classList.add('modal-content');
-    modalContent.textContent = 'Заказ принят!';
+    modalContent.textContent = getDrinksPhrase();
 
     const closeButton = document.createElement('span');
     closeButton.classList.add('close-button');
     closeButton.textContent = '×';
 
-    closeButton.addEventListener('click', function() {
+    closeButton.addEventListener('click', function () {
         modal.remove();
     });
 
@@ -69,3 +70,17 @@ submitButton.addEventListener('click', event => {
 
     document.body.appendChild(modal);
 });
+
+
+function getDrinksPhrase() {
+    const number = beveragesCount();
+    let base = `Вы заказали ${number} `;
+    if (number % 10 === 1 && number % 100 !== 11) {
+        base += 'напиток';
+    } else if ([2, 3, 4].includes(number % 10) && ![12, 13, 14].includes(number % 100)) {
+        base += 'напитка';
+    } else {
+        base += 'напитков';
+    }
+    return base;
+}
