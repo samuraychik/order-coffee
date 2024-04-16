@@ -45,3 +45,29 @@ function updateDeleteButtons() {
 }
 
 addButton.addEventListener('click', addNewBeverage);
+
+
+const submitButton = document.querySelector('.submit-button');
+
+submitButton.addEventListener('click', event => {
+    event.preventDefault();
+    const modal = document.createElement('div');
+    modal.classList.add('modal-window');
+
+    const modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
+    modalContent.textContent = 'Заказ принят!';
+
+    const closeButton = document.createElement('span');
+    closeButton.classList.add('close-button');
+    closeButton.textContent = '×';
+
+    closeButton.addEventListener('click', function() {
+        modal.remove();
+    });
+
+    modalContent.appendChild(closeButton);
+    modal.appendChild(modalContent);
+
+    document.body.appendChild(modal);
+});
