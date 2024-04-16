@@ -2,8 +2,10 @@ const addButton = document.querySelector('.add-button');
 const beverage = document.querySelector('.beverage');
 
 let beveragesCount = 0;
+
 addNewBeverage();
 beverage.remove();
+addButton.addEventListener('click', addNewBeverage);
 
 function addNewBeverage() {
     const newBeverage = beverage.cloneNode(true);
@@ -33,15 +35,11 @@ function appendDeleteButton(beverage) {
     deleteButton.addEventListener('click', () => {
         if (beveragesCount > 1) {
             beverage.remove();
-            beveragesCount--;
         }
     });
 
     beverage.appendChild(deleteButton);
 }
-
-addButton.addEventListener('click', addNewBeverage);
-
 
 const submitButton = document.querySelector('.submit-button');
 
