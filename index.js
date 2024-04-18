@@ -26,6 +26,7 @@ function addNewBeverage() {
 
     newBeverage.querySelector('.beverage-count').textContent = `Напиток №${++formsCount}`;
     makeFormEntriesUnique(newBeverage, formsCount);
+    appendWishesArea(newBeverage);
     appendDeleteButton(newBeverage);
 
     const allBeverages = document.querySelectorAll('.beverage');
@@ -54,7 +55,7 @@ function changeAllFormsIndexing() {
 
 function appendDeleteButton(beverage) {
     const deleteButton = document.createElement('button');
-    deleteButton.classList.add('delete_button');
+    deleteButton.classList.add('delete-button');
     deleteButton.textContent = 'X';
     deleteButton.style.position = 'absolut';
     deleteButton.style.top = '0';
@@ -70,6 +71,39 @@ function appendDeleteButton(beverage) {
     });
 
     beverage.appendChild(deleteButton);
+}
+
+function appendWishesArea(beverage) {
+    const label = document.createElement('label');
+    label.classList.add('wishes-label');
+    label.setAttribute('for', 'wishes');
+    label.textContent = 'И еще вот что';
+
+    const wishes = document.createElement('div');
+    label.classList.add('wishes');
+    wishes.id = 'wishes';
+
+    const wishesArea = document.createElement('textarea');
+    label.classList.add('wishes-area');
+
+    const wishesText = document.createElement('p');
+    wishesText.classList.add('wishes-text');
+    wishesText.textContent = '"Здесь будут отображены ваши желания"';
+
+    beverage.appendChild(label);
+    beverage.appendChild(wishes);
+    wishes.appendChild(wishesArea);
+    wishes.appendChild(wishesText);
+
+    wishesArea.addEventListener('input', (event) => {
+        wishesText.innerHTML = '"' + highlightKeywords(event.target.value) + '"';
+    })
+}
+
+function highlightKeywords(text) {
+    const keywords = ['срочно', 'быстрее', 'побыстрее', 'скорее', 'поскорее', 'очень нужно'];
+    const regex = new RegExp(keywords.join('|'), 'gi');
+    return text.replace(regex, match => `<b>${match}</b>`);
 }
 
 function beveragesCount() {
@@ -103,7 +137,6 @@ submitButton.addEventListener('click', event => {
     document.body.appendChild(modal);
 
 });
-
 
 function getDrinksPhrase() {
     const number = beveragesCount();
