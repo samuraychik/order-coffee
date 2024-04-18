@@ -3,6 +3,20 @@ const beverage = document.querySelector('.beverage');
 
 let formsCount = 0;
 
+const milkTypes = new Map([
+    ["usual", "Обычное"],
+    ["no-fat", "Обезжиренное"],
+    ["soy", "Соевое"],
+    ["coconut", "Кокосовое"],
+]);
+
+const optionsTypes = new Map([
+    ["whipped cream", "Взбитые сливки"],
+    ["marshmallow", "Зефирки"],
+    ["chocolate", "Шоколад"],
+    ["cinnamon", "Корица"],
+]);
+
 addNewBeverage();
 beverage.remove();
 addButton.addEventListener('click', addNewBeverage);
@@ -22,7 +36,12 @@ function makeRadioUnique(beverage) {
     for (const radio of beverage.querySelectorAll('input[type=radio]')) {
         radio.name = `milk${formsCount}`;
     }
+
+    for (const checkbox of beverage.querySelectorAll('input[type=checkbox]')) {
+        checkbox.name = `options${formsCount}`;
+    }
 }
+
 
 function appendDeleteButton(beverage) {
     const deleteButton = document.createElement('button');
@@ -65,10 +84,13 @@ submitButton.addEventListener('click', event => {
         modal.remove();
     });
 
-    modalContent.appendChild(closeButton);
-    modal.appendChild(modalContent);
+    const table = getOrderTable();
 
+    modalContent.appendChild(closeButton);
+    modalContent.appendChild(table);
+    modal.appendChild(modalContent);
     document.body.appendChild(modal);
+
 });
 
 
@@ -83,4 +105,48 @@ function getDrinksPhrase() {
         base += 'напитков';
     }
     return base;
+}
+
+
+function getOrderTable() {
+    const beverageFields = document.querySelectorAll('.beverage');
+
+    const table = document.createElement('table');
+    table.innerHTML = `
+    <thead>
+      <tr>
+        <th>Напиток</th>
+        <th>Молоко</th>
+        <th>Дополнительно</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  `;
+
+    const tableBody = table.querySelector('tbody');
+
+    beverageFields.forEach((fieldset) => {
+        const beverageSelect = fieldset.querySelector('select');
+        const beverage = beverageSelect.options[beverageSelect.selectedIndex].text;
+
+        const number = fieldset.querySelector('.beverage-count').textContent.split("№")[1];
+        const milkRadio = fieldset.querySelector(`input[name='milk${number}']:checked`);
+        const milk = milkRadio ? milkTypes.get(milkRadio.value) : '';
+
+        const optionsCheckboxes = fieldset.querySelectorAll(`input[name="options${number}"]:checked`);
+        const options = Array.from(optionsCheckboxes)
+            .map(checkbox => optionsTypes.get(checkbox.value))
+            .join(', ');
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+      <td>${beverage}</td>
+      <td>${milk}</td>
+      <td>${options}</td>
+    `;
+
+        tableBody.appendChild(row);
+    });
+    return table;
 }
