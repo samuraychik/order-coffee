@@ -25,23 +25,32 @@ function addNewBeverage() {
     const newBeverage = beverage.cloneNode(true);
 
     newBeverage.querySelector('.beverage-count').textContent = `Напиток №${++formsCount}`;
-    makeRadioUnique(newBeverage);
+    makeFormEntriesUnique(newBeverage, formsCount);
     appendDeleteButton(newBeverage);
 
     const allBeverages = document.querySelectorAll('.beverage');
     allBeverages[allBeverages.length - 1].after(newBeverage);
 }
 
-function makeRadioUnique(beverage) {
+function makeFormEntriesUnique(beverage, number) {
     for (const radio of beverage.querySelectorAll('input[type=radio]')) {
-        radio.name = `milk${formsCount}`;
+        radio.name = `milk${number}`;
     }
 
     for (const checkbox of beverage.querySelectorAll('input[type=checkbox]')) {
-        checkbox.name = `options${formsCount}`;
+        checkbox.name = `options${number}`;
     }
 }
 
+function changeAllFormsIndexing() {
+    const beverageFields = document.querySelectorAll('.beverage');
+    let counter = 1;
+    beverageFields.forEach((fieldset) => {
+        fieldset.querySelector('.beverage-count').textContent = `Напиток №${counter}`;
+        makeFormEntriesUnique(fieldset, counter);
+        counter++;
+    });
+}
 
 function appendDeleteButton(beverage) {
     const deleteButton = document.createElement('button');
@@ -55,6 +64,8 @@ function appendDeleteButton(beverage) {
     deleteButton.addEventListener('click', () => {
         if (beveragesCount() > 1) {
             beverage.remove();
+            formsCount--;
+            changeAllFormsIndexing();
         }
     });
 
